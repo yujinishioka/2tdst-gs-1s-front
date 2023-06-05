@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     borderRadius:8,
     marginTop:12,
     marginBottom:12,
-    padding: '0 0 0 15px'
+    paddingLeft: 15
   },
   inputFilter: {
     width: '100%',
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
     borderRadius:8,
     marginTop:12,
     marginBottom:12,
-    padding: '0 0 0 15px'
+    paddingLeft: 15
   },
   buttonPrimary: {
     width:110,
