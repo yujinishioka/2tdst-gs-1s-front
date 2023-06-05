@@ -1,12 +1,14 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import { Text, View, StyleSheet, Image } from 'react-native';
-import Home from './home/index'
-import Items from './Items/index'
-import Recipes from './Recipes/index'
-import About from './About/index'
-import Profile from './Profile/index'
-import {createDrawerNavigator, DrawerItems} from '@react-navigation/drawer'
+import {createDrawerNavigator, DrawerItems} from '@react-navigation/drawer';
+
+import Home from './home/index';
+import Profile from './Profile/index';
+import Items from './Items/index';
+import Recipes from './Recipes/index';
+import About from './About/index';
+import Logoff from './Logoff';
 
 const {Navigator, Screen} = createDrawerNavigator();
 const FuncHome = () => <Home/>
@@ -25,7 +27,7 @@ export default function App() {
         <Screen name="Itens" component={FuncItems}/>
         <Screen name="Receitas" component={FuncRecipes}/>
         <Screen name="Sobre" component={FuncAbout}/>
-        <Screen name="Sair" component={FuncRecipes}/>
+        <Screen name="Sair" component={Logoff}/>
       </Navigator>
       </View>
     </NavigationContainer>

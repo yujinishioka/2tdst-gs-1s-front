@@ -12,6 +12,7 @@
     "@react-navigation/bottom-tabs": "*",
     "@react-navigation/drawer": "*",
     "@react-navigation/native": "*",
+    "axios": "^1.4.0",
     "expo": "~47.0.14",
     "expo-constants": "~14.0.2",
     "expo-status-bar": "~1.4.2",

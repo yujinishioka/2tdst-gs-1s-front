@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, Alert, Image, StyleSheet, TouchableOpacity  } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+
+import api from '../../../api'
+import Logged from '../../Logged/index'
 
 const RegisterScreen = () => {
   const [showForm, setShowForm] = useState(false);
-  const [logged, setLogged] = useState(false);
   const [users, setUsers] = useState([]);
+  const [logged, setLogged] = useState(false);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -47,6 +51,7 @@ const RegisterScreen = () => {
     })
     .catch((err)=>{alert("Erro ao ler a lista de usuários: " + err)})
     };
+
     const handleRegister = async () => {
       const obj = { loginRegister, passwordRegister };
       try {
@@ -89,12 +94,18 @@ const RegisterScreen = () => {
   };
 
   const FormLogin = () => {
-    const [login, setLogin] = useState('');
-    const [passwordLogin, setPasswordLogin] = useState('');
+    const [login, setLogin] = useState('neurotrix1@fiap.com');
+    const [passwordLogin, setPasswordLogin] = useState('teste123');
+
     const handleLogin = () => {
-      const user = users.find((u) => u.loginRegister === login && u.passwordRegister === passwordLogin);
-      if (user) { alert('Login realizado com sucesso!'); } 
-      else { alert('Usuário ou senha incorretos'); }
+      api.post('/login', {
+        "login": login,
+        "password": passwordLogin
+      }).then(function(resp) {
+        AsyncStorage.setItem('userToken', resp.data);
+      }).catch(function(err) {
+        alert("Usuario ou senha invalido.")
+      })
     };
 
     const showUsers = async () => {
