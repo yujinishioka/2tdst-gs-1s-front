@@ -104,8 +104,8 @@ const RegisterScreen = () => {
       }).then(function(resp) {
         AsyncStorage.setItem('userToken', resp.data);
       }).catch(function(err) {
-        alert("Usuario ou senha invalido.")
-      })
+        alert("Usuario ou senha invalido.");
+      });
     };
 
     const showUsers = async () => {
@@ -148,6 +148,7 @@ const RegisterScreen = () => {
   return (
     <View style={styles.content}>
       { showForm ? ( <FormRegister/> ):( <FormLogin/> )}
+      {/* { logged ? <Logged/> : showForm ? (<FormRegister/> ):(<FormLogin/>) } */}
     </View>
   );
 };
