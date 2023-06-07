@@ -1,5 +1,8 @@
-# 2TDST
-# Global Solution - 1º Semestre
+# 2TDST ~ Global Solution - 3º Semestre
+
+<p>
+  <img src="./gs-front/assets/logo-circle.png" width="350" title="hover text">
+</p>
 
 ## Integrantes
 
@@ -11,20 +14,30 @@ RM | Nome
 **94266** | Vinicius Alves Torres
 **92895** | Vinicius Yuji Nishioka
 
----
 
-## Front
+## Resumo do Projeto
+Combata a fome global com o CookAi: um aplicativo revolucionário com um toque de inteligência artificial. Gerencie alimentos de forma eficiente, crie receitas incríveis e evite desperdícios.
+Chega de pensar "o que vou cozinhar hoje?" - o CookAi torna a tarefa fácil e divertida!
 
----
+## Start Project
+<details>
+<summary>Expo</summary>
 
-## Rodando o Projeto
+Expo
+
+</details>
+
+<details>
+<summary>Android studio</summary>
 
 ### **Dependências**
 
-* Node 18.x
-* JDK 11
-* Android Studio
-
+| Dependency | Version  |
+| --- | --- |
+| Node | 18.x |
+| JDK | 11 |
+| Android Studio | 2022.2.1.20 |
+  
 ### **Recomendações**
 
 * Visual Studio Code
@@ -131,3 +144,5 @@ ou
 ```
 expo start
 ```
+
+</details>
