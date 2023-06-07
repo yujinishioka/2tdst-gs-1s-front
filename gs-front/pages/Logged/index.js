@@ -17,7 +17,7 @@ const FuncItems = () => <Items/>
 const FuncRecipes = () => <Recipes/>
 const FuncAbout = () => <About/>
 
-export default function App() {
+export default function App({onLogout}) {
   return (
     <NavigationContainer drawerItemStyle={styles.drawerItem} style={styles.drawerItem}>
       <View style={styles.container}>
@@ -27,7 +27,7 @@ export default function App() {
         <Screen name="Itens" component={FuncItems}/>
         <Screen name="Receitas" component={FuncRecipes}/>
         <Screen name="Sobre" component={FuncAbout}/>
-        <Screen name="Sair" component={Logoff}/>
+        {/* <Screen name="Sair" component={Logoff}/> */}
       </Navigator>
       </View>
     </NavigationContainer>

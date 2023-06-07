@@ -1,116 +1,197 @@
 import React, { useState, useEffect } from 'react';
 import { Button, FlatList, Text, TextInput, View, StyleSheet, TouchableOpacity } from 'react-native';
+import SelectDropdown from 'react-native-select-dropdown'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialIcons } from '@expo/vector-icons';
 import { TouchableHighlight } from 'react-native';
+import api from '../../../api'
 
 const {Screen, Navigator} = createBottomTabNavigator();
-
 
 export default function App() {
   const [showForm, setShowForm] = useState(false);
   const [listaAlimento, setListaAlimento] = useState([]);
   const [contador, setContador] = useState(1);
 
+  const Cadastro = (props) => {
+    const [nome, setNome] = useState("");
+    const [tempo, setTempo] = useState("");
+    const [ingredientes, setIngredientes] = useState("");
+    const [dificuldade, setDificuldade] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [receitaCriada, setReceitaCriada] = useState(false);
+    const [receita, setReceita] = useState({
+      titulo: "Receita",
+      ingredientes: [],
+      modoPreparo: "",
+      tempoPreparo: "",
+      dificuldade: ""
+    })
+    const niveisDificuldade = [
+      "facil", 
+      "medio", 
+      "dificil"
+    ];
 
-const Cadastro = (props) => {
-  const [nome, setNome] = useState("Queijo Mussarela");
-  const [tipo, setTipo] = useState("Frios");
-  const [preco, setPreco] = useState("36.00");
-  const [items, setitems] = useState("200gr");
-  return (
-    <View style={styles.container}>
-      <Text style={styles.link} onPress={()=>{setShowForm(false)}}>Receitas</Text>
-      <View style={styles.center}>
-        <Text style={styles.titleCard}>Cadastrar Receitas</Text>
-      </View>
-      <View style={styles.form}>
-        
-        <Text style={styles.label}>Nome</Text>
-        <TextInput style={styles.input} value={nome} onChangeText={setNome}/>
-        <Text style={styles.label}>Tipo</Text>
-        <TextInput style={styles.input} value={tipo} onChangeText={setTipo}/>
-        <Text style={styles.label}>Preço</Text>
-        <TextInput style={styles.input} value={preco} onChangeText={setPreco}/>
-        <Text style={styles.label}>Itens:</Text>
-        <TextInput style={styles.input} value={items} onChangeText={setitems}/>
-        <View style={{flex:1, alignItems:"center"}}>
-          <TouchableOpacity  style={styles.buttonPrimary} onPress={()=>{
-          const obj = {nome, tipo, preco, items}
-          props.onSalvar( obj );
-        }} >
-          <Text>Salvar</Text>
-        </TouchableOpacity>
+    const adicionarItem = (item) => {
+      setListaAlimento([...listaAlimento, item]);
+    };
+
+    const Receita = ( props ) => {
+      return(
+        <View> 
+          { receitaCriada && (
+            <View>
+              <Text style={{color:"white"}}>{receita.titulo}</Text>
+              <Text style={{color:"white"}}>Lista de ingredientes:</Text>
+              {(receita.ingredientes).map((ingrediente, index) => {
+                return (
+                  <View key={index}>
+                    <Text style={{color:"white"}}>Ingrediente: {ingrediente.nome}</Text>
+                    <Text style={{color:"white"}}>Quantidade: {ingrediente.quantidade}</Text>
+                  </View>
+                )
+              })}
+              <Text style={{color:"white"}}>Modo de Preparo:</Text>
+              <Text style={{color:"white"}}>{receita.modoPreparo}</Text>
+              <Text style={{color:"white"}}>Tempo de Preparo: {receita.tempoPreparo}</Text>
+              <Text style={{color:"white"}}>Dificuldade: {receita.dificuldade}</Text>
+            </View>
+          )}
         </View>
-      </View>
-    </View>
-  );
-}
+      )
+    }
 
-const Item = (props) => {
-  console.log("Apagar: ", props);
-  return (
-    <View style={styles.card}>
-      <View style={{flex: 7}}>
-        <Text style={styles.titleCard}>{props.item.nome}</Text>
-        <Text style={styles.text}>Tipo: {props.item.tipo}</Text>
-        <Text style={styles.text}>Preco: {props.item.preco}</Text>
-        <Text style={styles.text}>items: {props.item.items}</Text>
-        <View style={styles.vitamins}>
-          <Text style={styles.vitaminD}>D</Text>
-          <Text style={styles.vitaminA}>A</Text>
-          <Text style={styles.vitaminB2}>B2</Text>
-          <Text style={styles.vitaminB12}>B12</Text>
-        </View>
-      </View>
-      <View style={styles.iconsCard}>
-        <TouchableHighlight onPress={()=>{
-          props.onApagar(props.item.id);
-        }}>
-          <MaterialIcons name="delete" style={styles.iconCard}/>
-        </TouchableHighlight>
-        <MaterialIcons name="edit" style={styles.iconCard}/>
-      </View>
-    </View>
-  )
-}
+    return (
+      <>
+        { isLoading ?
+          <View>
+          </View>
+          : 
+          <View style={styles.container}>
+            <Text style={styles.link} onPress={() => { setShowForm(false) }}>Receitas</Text>
+            <View style={styles.center}>
+              <Text style={styles.titleCard}>Gerar Receitas</Text>
+            </View>
+            <View style={styles.form}>
+              <Text style={styles.label}>Ingredientes</Text>
+              <TextInput
+                style={styles.input}
+                value={ingredientes}
+                onChangeText={setIngredientes}
+                placeholder="Selecione o tempo"
+              />
+              <Text style={styles.label}>Tempo em minutos</Text>
+              <TextInput
+                style={styles.input}
+                value={tempo}
+                onChangeText={setTempo}
+                placeholder="Selecione o tempo"
+              />
+              <Text style={styles.label}>Dificuldade</Text>
+              <SelectDropdown
+                data={niveisDificuldade}
+                value={dificuldade}
+                onSelect={(selectedItem, index) => {
+                  setDificuldade(selectedItem);
+                }}
+              />
+              <View style={{ flex: 1, alignItems: "center" }}>
+                <TouchableOpacity style={styles.buttonPrimary} onPress={() => {
+                  const obj = { ingredientes, tempo, dificuldade };
+                  setIsLoading(true);
+                  AsyncStorage.getItem("userToken").then((token) => {
+                    api.post('/message', {
+                        "question": obj.ingredientes
+                      }, {
+                      headers: {
+                        'Authorization': `Bearer ${token}`
+                      }
+                    }).then((resp) => {
+                      setReceita({
+                        titulo: resp.data.titulo,
+                        ingredientes: resp.data.ingredientes,
+                        modoPreparo: resp.data.modoPreparo,
+                        tempoPreparo: resp.data.tempoPreparo,
+                        dificuldade: resp.data.dificuldade
+                      });
+                      setReceitaCriada(true);
+                      alert(`Receita criada com sucesso.`);
+                      setIsLoading(false);
+                    }).catch((err) => {
+                      alert(`Erro: ${err}`);
+                      setIsLoading(false);
+                    })
+                  });
+                }}>
+                  <Text>Gerar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <Receita receita={receita}/>
+          </View>
+        }
+      </>
+    );
+  }
 
-const Listagem = (props) => { 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.link} onPress={()=>{setShowForm(true)}}>Cadastrar Receitas</Text>
-      <View style={styles.center}>
-        <Text style={styles.titleCard}>Receitas</Text>
-      </View>
-      <TextInput style={styles.inputFilter} placeholder="filtrar..."/>
-
+  const Item = (props) => {
+    return (
       <View style={styles.card}>
         <View style={{flex: 7}}>
-          <Text style={styles.titleCard}>Barra Cereal</Text>
-          <Text style={styles.text}>Tipo: natural</Text>
-          <Text style={styles.text}>Preco: $10.00</Text>
-          <Text style={styles.text}>Itens: Granola, ovo, farinha...</Text>
-          <Text style={styles.text}>VITAMINAS</Text>
-          <View style={styles.vitamins}>
+          <Text style={styles.titleCard}>{props.item.nome}</Text>
+          <Text style={styles.text}>Tipo: {props.item.tipo}</Text>
+          <Text style={styles.text}>Preco: {props.item.preco}</Text>
+          <Text style={styles.text}>items: {props.item.items}</Text>
+          {/* <View style={styles.vitamins}>
             <Text style={styles.vitaminD}>D</Text>
             <Text style={styles.vitaminA}>A</Text>
             <Text style={styles.vitaminB2}>B2</Text>
             <Text style={styles.vitaminB12}>B12</Text>
-          </View>
+          </View> */}
+        </View>
+        <View style={styles.iconsCard}>
+          <TouchableHighlight onPress={()=>{
+            props.onApagar(props.item.id);
+          }}>
+            <MaterialIcons name="delete" style={styles.iconCard}/>
+          </TouchableHighlight>
+          <MaterialIcons name="edit" style={styles.iconCard}/>
         </View>
       </View>
-      <FlatList data={props.lista} renderItem={
-        (propsItem)=><Item {...propsItem} onApagar={props.onApagar}/>}/>
-    </View>
-  )
-}
+    )
+  }
 
-  const salvar = ( obj ) => { 
-    obj['id'] = contador;
-    setContador(contador + 1);
-    setListaAlimento( [ ...listaAlimento, obj] );
+  const Listagem = (props) => { 
+    return (
+      <View style={styles.container}>
+        <Text style={styles.link} onPress={()=>{setShowForm(true)}}>Cadastrar Receitas</Text>
+        <View style={styles.center}>
+          <Text style={styles.titleCard}>Receitas</Text>
+        </View>
+        <TextInput style={styles.inputFilter} placeholder="filtrar..."/>
+
+        <View style={styles.card}>
+          <View style={{flex: 7}}>
+            <Text style={styles.titleCard}>Barra Cereal</Text>
+            <Text style={styles.text}>Tipo: natural</Text>
+            <Text style={styles.text}>Preco: $10.00</Text>
+            <Text style={styles.text}>Itens: Granola, ovo, farinha...</Text>
+            <Text style={styles.text}>VITAMINAS</Text>
+            <View style={styles.vitamins}>
+              <Text style={styles.vitaminD}>D</Text>
+              <Text style={styles.vitaminA}>A</Text>
+              <Text style={styles.vitaminB2}>B2</Text>
+              <Text style={styles.vitaminB12}>B12</Text>
+            </View>
+          </View>
+        </View>
+        <FlatList data={props.lista} renderItem={
+          (propsItem)=><Item {...propsItem} onApagar={props.onApagar}/>}/>
+      </View>
+    )
   }
 
   const apagar = ( id ) => { 
@@ -126,8 +207,8 @@ const Listagem = (props) => {
 
   return (
       <View style={{flex:1}}>
-      { showForm ? (
-        <Cadastro onSalvar={salvar}/>
+      { showForm ? (//showForm
+        <Cadastro/>
       ):
       (
         <Listagem lista={listaAlimento} onApagar={apagar}/>
@@ -209,7 +290,7 @@ const styles = StyleSheet.create({
     alignItems:"center",
     width:30,
     height:30,
-    background:"#d966a3",
+    backgroundColor:"#d966a3",
     color: "#ffffff80",
     shadowColor: "#d966a3",
     shadowOpacity: 0.3,
@@ -224,7 +305,7 @@ const styles = StyleSheet.create({
     alignItems:"center",
     width:30,
     height:30,
-    background:"#c56f2f",
+    backgroundColor:"#c56f2f",
     color: "#ffffff80",
     shadowColor: "#c56f2f",
     shadowOpacity: 0.3,
@@ -239,7 +320,7 @@ const styles = StyleSheet.create({
     alignItems:"center",
     width:30,
     height:30,
-    background:"#1777bb",
+    backgroundColor:"#1777bb",
     color: "#ffffff80",
     shadowColor: "#1777bb",
     shadowOpacity: 0.3,
@@ -248,7 +329,7 @@ const styles = StyleSheet.create({
   },
   form: {
     display:'flex',
-    background:'#26262a',
+    backgroundColor:'#26262a',
     padding:20,
     borderRadius:25
   },
@@ -259,7 +340,7 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     height: 40,
-    background:"#121214",
+    backgroundColor:"#121214",
     color:'#ffffff80',
     borderRadius:8,
     marginTop:12,
@@ -269,7 +350,7 @@ const styles = StyleSheet.create({
   inputFilter: {
     width: '100%',
     height: 40,
-    background:"#26262a",
+    backgroundColor:"#26262a",
     color:'#ffffff80',
     borderRadius:8,
     marginTop:12,
@@ -282,6 +363,6 @@ const styles = StyleSheet.create({
     textAlign:'center',
     justifyContent:'center',
     borderRadius: 15,
-    background:'#fe8f00'
+    backgroundColor:'#fe8f00'
   }
 });

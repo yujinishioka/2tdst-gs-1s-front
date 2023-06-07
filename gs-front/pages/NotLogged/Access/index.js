@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import api from '../../../api'
 import Logged from '../../Logged/index'
 
-const RegisterScreen = () => {
+const RegisterScreen = ({onLogin}) => {
   const [showForm, setShowForm] = useState(false);
   const [users, setUsers] = useState([]);
   const [logged, setLogged] = useState(false);
@@ -101,11 +101,12 @@ const RegisterScreen = () => {
       api.post('/login', {
         "login": login,
         "password": passwordLogin
-      }).then(function(resp) {
+      }).then((resp) => {
         AsyncStorage.setItem('userToken', resp.data);
-      }).catch(function(err) {
-        alert("Usuario ou senha invalido.")
-      })
+        onLogin();
+      }).catch((err) => {
+        alert(`Usuario ou senha invalido. Erro: ${err}`)
+      });
     };
 
     const showUsers = async () => {

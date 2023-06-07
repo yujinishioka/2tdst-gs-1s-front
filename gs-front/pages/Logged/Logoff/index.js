@@ -4,14 +4,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import NotLogged from '../../NotLogged/Access/index'
 
-export default function Logoff() {
+export default function Logoff({onLogout}) {
     useEffect(() => {
         AsyncStorage.removeItem('userToken');
+        onLogout();
     }, []);
 
     return (
         <>
-            <NotLogged/>
         </>
     )
 }

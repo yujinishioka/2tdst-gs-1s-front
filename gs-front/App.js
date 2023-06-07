@@ -9,16 +9,19 @@ import Logoff from './pages/Logged/Logoff';
 
 export default function App() { 
   const [userToken, setUserToken] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    AsyncStorage.getItem('userToken').then((token) => {
-      setUserToken(token);
-    });
-  }, [Logged, Logoff]);
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+  };
 
   return (
     <>
-      { userToken ? <Logged/> : <NotLogged/>}
+      { isLoggedIn ? <Logged onLogout={handleLogout}/> : <NotLogged onLogin={handleLogin}/>}
     </>
   );
 }
