@@ -67,28 +67,29 @@ const RegisterScreen = ({onLogin}) => {
 
     return (
       <View style={styles.form}>
-          <Image style={styles.logo} source={require('../../../assets/logo.png')}/>
+          <Image style={styles.logo} source={require('../../../assets/logo-circle.png')}/>
           <View style={styles.width}>
           <Text style={styles.title}>Register</Text>
           </View>
-          <TextInput placeholder={"Name"} style={styles.input} value={nameRegister} onChangeText={setNameRegister} />
-          <TextInput placeholder={"Email"} style={styles.input} value={loginRegister} onChangeText={setLoginRegister} />
-          <TextInput placeholder={"Password"} style={styles.input} value={passwordRegister} onChangeText={setPasswordRegister} secureTextEntry={true} />
+          <TextInput placeholder={"Nome"} placeholderTextColor={'#ffffff80'} style={styles.input} value={nameRegister} onChangeText={setNameRegister} />
+          <TextInput placeholder={"Email"} placeholderTextColor={'#ffffff80'} style={styles.input} value={loginRegister} onChangeText={setLoginRegister} />
+          <TextInput placeholder={"Senha"} placeholderTextColor={'#ffffff80'} style={styles.input} value={passwordRegister} onChangeText={setPasswordRegister} secureTextEntry={true} />
           <TouchableOpacity  style={styles.buttonPrimary} onPress={handleRegister} >
-            <Text>Register</Text>
+            <Text style={styles.txtButton}>Registrar</Text>
           </TouchableOpacity>
 
           <View style={styles.links}>
+            <Text style={styles.txt}>Já possui cadastro?</Text>
             <TouchableOpacity onPress={()=>setShowForm(false)}>
-              <Text style={styles.link}>Go to Login</Text>
+              <Text style={styles.link}>Faça o Login</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={clearStorage}>
+            {/* <TouchableOpacity onPress={clearStorage}>
               <Text style={styles.link}>Clean registers</Text>
             </TouchableOpacity>
+            <TouchableOpacity onPress={showUsers}>
+              <Text style={styles.link}>Show users</Text>
+            </TouchableOpacity> */}
           </View>
-          <TouchableOpacity onPress={showUsers}>
-            <Text style={styles.link}>Show users</Text>
-          </TouchableOpacity>
       </View>
     );
   };
@@ -122,25 +123,26 @@ const RegisterScreen = ({onLogin}) => {
 
     return (
       <View style={styles.form}>
-        <Image style={styles.logo} source={require('../../../assets/logo.png')}/>
+        <Image style={styles.logo} source={require('../../../assets/logo-circle.png')}/>
         <View style={styles.width}>
           <Text style={styles.title}>Login</Text>
         </View>
-        <TextInput placeholder={"Email"} style={styles.input} value={login} onChangeText={setLogin} />
-        <TextInput placeholder={"Password"} style={styles.input} value={passwordLogin} onChangeText={setPasswordLogin} secureTextEntry={true}/>
+        <TextInput placeholder={"Email"} placeholderTextColor={'#ffffff80'} style={styles.input} value={login} onChangeText={setLogin} />
+        <TextInput placeholder={"Senha"} placeholderTextColor={'#ffffff80'} style={styles.input} value={passwordLogin} onChangeText={setPasswordLogin} secureTextEntry={true}/>
         <TouchableOpacity  style={styles.buttonPrimary} onPress={handleLogin} >
-          <Text>Login</Text>
+          <Text style={styles.txtButton}>Log in</Text>
         </TouchableOpacity>
         <View style={styles.links}>
+          <Text style={styles.txt}>Não possui cadastro?</Text>
           <TouchableOpacity onPress={()=>setShowForm(true)}>
-            <Text style={styles.link}>Go to Register</Text>
+            <Text style={styles.link}>Registre-se!</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={clearStorage}>
+          {/* <TouchableOpacity onPress={clearStorage}>
             <Text style={styles.link}>Clean registers</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={showUsers}>
             <Text style={styles.link}>Show users</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     );
@@ -165,11 +167,13 @@ const styles = StyleSheet.create({
     alignItems:'center',
     backgroundColor:'#26262a',
     padding:20,
-    borderRadius:25
+    paddingTop: 40,
+    borderRadius:25,
   },
   logo: {
     width: 120,
-    height: 120
+    height: 120,
+    marginBottom: 30
   },
   input: {
     width: '100%',
@@ -200,10 +204,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   buttonPrimary: {
-    width:110,
+    width:180,
     height:45,
     textAlign:'center',
     justifyContent:'center',
+    marginTop: 20,
     borderRadius: 15,
     backgroundColor:'#fe8f00'
   },
@@ -218,14 +223,20 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor:'#fe8f00',
   },
+  txt: {
+    color: 'white'
+  },
   txtButton: {
-    color:'#5170fd',
+    color:'white',
+    textTransform: 'uppercase',
+    textAlign: 'center',
   },
   width:{
     width:'100%'
   },
   links:{
-    marginTop:20
+    marginTop:20,
+    marginBottom: 30,
   },
   link:{
     textDecorationLine:'underline',

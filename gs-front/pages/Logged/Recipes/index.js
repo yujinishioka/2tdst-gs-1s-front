@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Text, TextInput, View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons';
 import { TouchableHighlight } from 'react-native';
 import api from '../../../api'
 
-export default function App() {
+export default function Recipes() {
   const [showForm, setShowForm] = useState(false);
   const [listaAlimento, setListaAlimento] = useState([]);
   const [contador, setContador] = useState(0);
@@ -54,17 +54,23 @@ export default function App() {
           { receitaCriada && (
             <View style={styles.card}>
               <Text style={styles.titleCard}>{receita.titulo}</Text>
+              <View style={styles.divisoria}></View>
               <Text style={styles.text}>Lista de ingredientes:</Text>
               {(receita.ingredientes).map((ingrediente, index) => {
                 return (
                   <View key={index}>
-                    <Text style={styles.text}>Ingrediente: {ingrediente.nome}</Text>
-                    <Text style={styles.text}>Quantidade: {ingrediente.quantidade}</Text>
+                    { ingrediente.quantidade == "a gosto" ? 
+                      <Text style={styles.text}>- {ingrediente.nome} {ingrediente.quantidade}</Text>
+                      : 
+                      <Text style={styles.text}>- {ingrediente.quantidade} de {ingrediente.nome}</Text>
+                    }
                   </View>
                 )
               })}
+              <View style={styles.divisoria}></View>
               <Text style={styles.text}>Modo de Preparo:</Text>
               <Text style={styles.text}>{receita.modoPreparo}</Text>
+              <View style={styles.divisoria}></View>
               <Text style={styles.text}>Tempo de Preparo: {receita.tempoPreparo}</Text>
               <Text style={styles.text}>Dificuldade: {receita.dificuldade}</Text>
             </View>
@@ -77,7 +83,10 @@ export default function App() {
       <>
         { isLoading ?
           <View style={styles.container}>
-            <Text>Carregando...</Text>
+            <View style={styles.carregamento}>
+              <Image style={styles.logo} source={require('../../../assets/logo-circle.png')}/>
+              <Text style={styles.textLoading}>Gerando receita...</Text>
+            </View>
           </View>
           : 
           <ScrollView style={styles.container}>
@@ -100,15 +109,19 @@ export default function App() {
                 onChangeText={setTempo}
                 placeholder="Selecione o tempo"
               />
-              <Text style={styles.label}>Dificuldade</Text>
-              <SelectDropdown
-                data={niveisDificuldade}
-                value={dificuldade}
-                onSelect={(selectedItem, index) => {
-                  setDificuldade(selectedItem);
-                }}
-              />
-              <View style={{ flex: 1, alignItems: "center" }}>
+              <View style={styles.center}>
+                <Text style={styles.label}>Dificuldade</Text>
+                <SelectDropdown
+                  buttonStyle={{ marginTop: 10 }}
+                  dropdownPosition='bottom'
+                  data={niveisDificuldade}
+                  value={dificuldade}
+                  onSelect={(selectedItem, index) => {
+                    setDificuldade(selectedItem);
+                  }}
+                />
+              </View>
+              <View style={{ flex: 1, alignItems: "center", marginVertical: 20 }}>
                 <TouchableOpacity style={styles.buttonPrimary} onPress={() => {
                   const obj = { ingredientes, tempo, dificuldade };
                   setIsLoading(true);
@@ -138,11 +151,13 @@ export default function App() {
                     })
                   });
                 }}>
-                  <Text>Gerar</Text>
+                  <Text style={styles.txtButton}>Gerar</Text>
                 </TouchableOpacity>
               </View>
             </View>
+            <View style={styles.empty}></View>
             <Receita receita={receita}/>
+            <View style={styles.empty}></View>
           </ScrollView>
         }
       </>
@@ -183,7 +198,7 @@ export default function App() {
         <View style={styles.center}>
           <Text style={styles.titleCard}>Receitas</Text>
         </View>
-        <TextInput style={styles.inputFilter} placeholder="filtrar..."/>
+        <TextInput style={styles.inputFilter} placeholder="filtrar..." placeholderTextColor={'#ffffff80'}/>
         {/* <FlatList data={props.lista} renderItem={
           (propsItem)=><Item {...propsItem} onApagar={props.onApagar}/>}/> */}
         <View>
@@ -192,6 +207,8 @@ export default function App() {
               return(
                 <View style={styles.card} key={index}>
                   <Text style={styles.titleCard}>{receita.titulo}</Text>
+                  <View style={styles.divisoria}></View>
+                  <Text style={styles.text}>Lista de ingredientes:</Text>
                   {
                     (receita.ingredientes).map((ingrediente, index) => {
                       return(
@@ -205,8 +222,10 @@ export default function App() {
                       )
                     })
                   }
+                  <View style={styles.divisoria}></View>
                   <Text style={styles.text}>Modo de Preparo:</Text>
                   <Text style={styles.text}>{receita.modoPreparo}</Text>
+                  <View style={styles.divisoria}></View>
                   <Text style={styles.text}>Tempo de Preparo: {receita.tempoPreparo}</Text>
                   <Text style={styles.text}>Dificuldade: {receita.dificuldade}</Text>
                 </View>
@@ -214,6 +233,7 @@ export default function App() {
             })
           }
         </View>
+        <View style={styles.empty}></View>
       </ScrollView>
     )
   }
@@ -277,6 +297,16 @@ const styles = StyleSheet.create({
     color: "#ffffff80",
     fontSize:15
   },
+  textLoading: {
+    color: "#ffffff80",
+    fontSize: 24
+  },
+  divisoria: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#ffffff80',
+    marginVertical: 10,
+    marginHorizontal: 3
+  }, 
   iconsCard: {
     flexDirection:"row",
     color: "#ffffff80",
@@ -374,19 +404,37 @@ const styles = StyleSheet.create({
   inputFilter: {
     width: '100%',
     height: 40,
+    color: '#ffffff80',
     backgroundColor:"#26262a",
-    color:'#ffffff80',
     borderRadius:8,
     marginTop:12,
     marginBottom:12,
     paddingLeft: 15
   },
   buttonPrimary: {
-    width:110,
+    width:200,
     height:45,
     textAlign:'center',
     justifyContent:'center',
     borderRadius: 15,
     backgroundColor:'#fe8f00'
+  },
+  txtButton: {
+    color:'white',
+    textTransform: 'uppercase',
+    textAlign: 'center',
+  },
+  logo: {
+    width: 200,
+    height: 200,
+    marginBottom: 20,
+  },
+  carregamento: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  empty: {
+    marginVertical: 20
   }
 });
