@@ -1,19 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Button, FlatList, Text, TextInput, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, TextInput, View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialIcons } from '@expo/vector-icons';
 import { TouchableHighlight } from 'react-native';
 import api from '../../../api'
-
-const {Screen, Navigator} = createBottomTabNavigator();
 
 export default function App() {
   const [showForm, setShowForm] = useState(false);
   const [listaAlimento, setListaAlimento] = useState([]);
   const [contador, setContador] = useState(1);
+
+  useEffect(() => {
+    AsyncStorage.getItem("userToken").then((token) => {
+      api.get(`/recipe?pageNumber=0`,{
+        headers: {
+          'Authorization': `Bearer ${token}`
+      }}).then((resp) => {
+        setListaAlimento(resp.data);
+      }).catch((err) => {
+        alert(`Erro: ${err}`);
+      })
+    })
+  }, [])
 
   const Cadastro = (props) => {
     const [nome, setNome] = useState("");
@@ -39,25 +48,25 @@ export default function App() {
       setListaAlimento([...listaAlimento, item]);
     };
 
-    const Receita = ( props ) => {
+    const Receita = () => {
       return(
         <View> 
           { receitaCriada && (
-            <View>
-              <Text style={{color:"white"}}>{receita.titulo}</Text>
-              <Text style={{color:"white"}}>Lista de ingredientes:</Text>
+            <View style={styles.card}>
+              <Text style={styles.titleCard}>{receita.titulo}</Text>
+              <Text style={styles.text}>Lista de ingredientes:</Text>
               {(receita.ingredientes).map((ingrediente, index) => {
                 return (
                   <View key={index}>
-                    <Text style={{color:"white"}}>Ingrediente: {ingrediente.nome}</Text>
-                    <Text style={{color:"white"}}>Quantidade: {ingrediente.quantidade}</Text>
+                    <Text style={styles.text}>Ingrediente: {ingrediente.nome}</Text>
+                    <Text style={styles.text}>Quantidade: {ingrediente.quantidade}</Text>
                   </View>
                 )
               })}
-              <Text style={{color:"white"}}>Modo de Preparo:</Text>
-              <Text style={{color:"white"}}>{receita.modoPreparo}</Text>
-              <Text style={{color:"white"}}>Tempo de Preparo: {receita.tempoPreparo}</Text>
-              <Text style={{color:"white"}}>Dificuldade: {receita.dificuldade}</Text>
+              <Text style={styles.text}>Modo de Preparo:</Text>
+              <Text style={styles.text}>{receita.modoPreparo}</Text>
+              <Text style={styles.text}>Tempo de Preparo: {receita.tempoPreparo}</Text>
+              <Text style={styles.text}>Dificuldade: {receita.dificuldade}</Text>
             </View>
           )}
         </View>
@@ -67,10 +76,11 @@ export default function App() {
     return (
       <>
         { isLoading ?
-          <View>
+          <View style={styles.container}>
+            <Text>Carregando...</Text>
           </View>
           : 
-          <View style={styles.container}>
+          <ScrollView style={styles.container}>
             <Text style={styles.link} onPress={() => { setShowForm(false) }}>Receitas</Text>
             <View style={styles.center}>
               <Text style={styles.titleCard}>Gerar Receitas</Text>
@@ -103,8 +113,10 @@ export default function App() {
                   const obj = { ingredientes, tempo, dificuldade };
                   setIsLoading(true);
                   AsyncStorage.getItem("userToken").then((token) => {
-                    api.post('/message', {
-                        "question": obj.ingredientes
+                    api.post('/recipe', {
+                        "ingredientes": obj.ingredientes,
+                        "dificuldade": obj.dificuldade,
+                        "tempoMaximo": `${obj.tempo} minutos`
                       }, {
                       headers: {
                         'Authorization': `Bearer ${token}`
@@ -131,7 +143,7 @@ export default function App() {
               </View>
             </View>
             <Receita receita={receita}/>
-          </View>
+          </ScrollView>
         }
       </>
     );
@@ -166,31 +178,43 @@ export default function App() {
 
   const Listagem = (props) => { 
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Text style={styles.link} onPress={()=>{setShowForm(true)}}>Cadastrar Receitas</Text>
         <View style={styles.center}>
           <Text style={styles.titleCard}>Receitas</Text>
         </View>
         <TextInput style={styles.inputFilter} placeholder="filtrar..."/>
-
-        <View style={styles.card}>
-          <View style={{flex: 7}}>
-            <Text style={styles.titleCard}>Barra Cereal</Text>
-            <Text style={styles.text}>Tipo: natural</Text>
-            <Text style={styles.text}>Preco: $10.00</Text>
-            <Text style={styles.text}>Itens: Granola, ovo, farinha...</Text>
-            <Text style={styles.text}>VITAMINAS</Text>
-            <View style={styles.vitamins}>
-              <Text style={styles.vitaminD}>D</Text>
-              <Text style={styles.vitaminA}>A</Text>
-              <Text style={styles.vitaminB2}>B2</Text>
-              <Text style={styles.vitaminB12}>B12</Text>
-            </View>
-          </View>
+        {/* <FlatList data={props.lista} renderItem={
+          (propsItem)=><Item {...propsItem} onApagar={props.onApagar}/>}/> */}
+        <View>
+          {
+            listaAlimento.map((receita, index) => {
+              return(
+                <View style={styles.card} key={index}>
+                  <Text style={styles.titleCard}>{receita.titulo}</Text>
+                  {
+                    (receita.ingredientes).map((ingrediente, index) => {
+                      return(
+                        <View key={index}>
+                          { ingrediente.quantidade == "a gosto" ? 
+                          <Text style={styles.text}>- {ingrediente.nome} {ingrediente.quantidade}</Text>
+                          : 
+                          <Text style={styles.text}>- {ingrediente.quantidade} de {ingrediente.nome}</Text>
+                          }  
+                        </View>
+                      )
+                    })
+                  }
+                  <Text style={styles.text}>Modo de Preparo:</Text>
+                  <Text style={styles.text}>{receita.modoPreparo}</Text>
+                  <Text style={styles.text}>Tempo de Preparo: {receita.tempoPreparo}</Text>
+                  <Text style={styles.text}>Dificuldade: {receita.dificuldade}</Text>
+                </View>
+              )
+            })
+          }
         </View>
-        <FlatList data={props.lista} renderItem={
-          (propsItem)=><Item {...propsItem} onApagar={props.onApagar}/>}/>
-      </View>
+      </ScrollView>
     )
   }
 
@@ -225,7 +249,7 @@ const styles = StyleSheet.create({
     height:"100%"
   },
   card: {
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent:"space-between",
     backgroundColor:"#26262a",
     borderColor: "#26262a",

@@ -21,7 +21,7 @@ const Cadastro = (props) => {
   const [preco, setPreco] = useState("36.00");
   const [quantidade, setQuantidade] = useState("200gr");
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.link} onPress={()=>{setShowForm(false)}}>Itens</Text>
       <View style={styles.center}>
         <Text style={styles.titleCard}>Cadastrar itens</Text>
@@ -45,7 +45,7 @@ const Cadastro = (props) => {
         </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 

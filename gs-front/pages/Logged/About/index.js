@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Text, View, ScrollView, StyleSheet, Image } from 'react-native';
 
 export default function App() {
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.card}>
         <View style={{alignItems:"center"}}>
           <Image style={{width: 120, height: 138}} source={require('../../../assets/logo.png')}/>
@@ -50,7 +50,7 @@ export default function App() {
           <Text style={styles.subTitle}>Vinicius Torres</Text>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
