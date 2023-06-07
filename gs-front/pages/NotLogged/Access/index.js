@@ -37,6 +37,7 @@ const RegisterScreen = ({onLogin}) => {
   };
 
   const FormRegister = () => {
+    const [nameRegister, setNameRegister] = useState('');
     const [loginRegister, setLoginRegister] = useState('');
     const [passwordRegister, setPasswordRegister] = useState('');
 
@@ -53,16 +54,15 @@ const RegisterScreen = ({onLogin}) => {
     };
 
     const handleRegister = async () => {
-      const obj = { loginRegister, passwordRegister };
-      try {
-        const newUsers = [...users, obj];
-        await AsyncStorage.setItem('users', JSON.stringify(newUsers));
-        setUsers(newUsers);
-        alert(`New user: ${JSON.stringify(obj)}`);
-      } catch (error) {
-        console.error(error);
-        alert('Erro ao cadastrar usuário');
-      }
+      api.post('/user/register', {
+        "name": nameRegister,
+        "email": loginRegister,
+        "password": passwordRegister
+      }).then(() => {
+        alert("Usuário cadastrado com sucesso.");
+      }).catch((err) => {
+        alert(`Erro ao cadastrar usuário. ${err}`);
+      })
     };
 
     return (
@@ -71,7 +71,7 @@ const RegisterScreen = ({onLogin}) => {
           <View style={styles.width}>
           <Text style={styles.title}>Register</Text>
           </View>
-          <TextInput placeholder={"Name"} style={styles.input} />
+          <TextInput placeholder={"Name"} style={styles.input} value={nameRegister} onChangeText={setNameRegister} />
           <TextInput placeholder={"Email"} style={styles.input} value={loginRegister} onChangeText={setLoginRegister} />
           <TextInput placeholder={"Password"} style={styles.input} value={passwordRegister} onChangeText={setPasswordRegister} secureTextEntry={true} />
           <TouchableOpacity  style={styles.buttonPrimary} onPress={handleRegister} >
@@ -105,7 +105,7 @@ const RegisterScreen = ({onLogin}) => {
         AsyncStorage.setItem('userToken', resp.data);
         onLogin();
       }).catch((err) => {
-        alert(`Usuario ou senha invalido. Erro: ${err}`)
+        alert(`Usuario ou senha invalido.`);
       });
     };
 

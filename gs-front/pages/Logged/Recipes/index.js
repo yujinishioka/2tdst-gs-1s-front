@@ -9,7 +9,7 @@ import api from '../../../api'
 export default function App() {
   const [showForm, setShowForm] = useState(false);
   const [listaAlimento, setListaAlimento] = useState([]);
-  const [contador, setContador] = useState(1);
+  const [contador, setContador] = useState(0);
 
   useEffect(() => {
     AsyncStorage.getItem("userToken").then((token) => {
@@ -22,7 +22,7 @@ export default function App() {
         alert(`Erro: ${err}`);
       })
     })
-  }, [])
+  }, [showForm]);
 
   const Cadastro = (props) => {
     const [nome, setNome] = useState("");
