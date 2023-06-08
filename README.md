@@ -179,27 +179,32 @@ expo start
 
 <details>
 <summary>API Java docker</summary>
-*Git bash*
-*run bash api java*
+*depois de abrir o prompt da pasta com Git bash, faça:*
 ```
 cd cook-ai-application/
 ```
+
 *voltar pasta*
 ```
 cd ..
 ```
+
 *rodar api*
 ```
 docker-compose up --build
 ```
-| Methods | Route  |
-| POST | /recipe (Cria receita) |
-| GET | /recipe (Busca todas receitas do usuário logado) |
-| GET | /recipe/all (Busca todas receitas de todos usuários) |
-| GET | /recipe/count (Busca a quantidade de receitas geradas pelo usuario logado) |
+</br>
 
-| POST | /login (login usuario) |
-| POST | /user/register (Registro usuario) |
-| GET | /user/all (busca todos usuarios - esse o front n usa) |
+## Rotas
+| Methods | Route  |
+|---|---|
+| POST | recipe (Cria receita) |
+| GET | recipe (Busca todas receitas do usuário logado) |
+| GET | recipe/all (Busca todas receitas de todos usuários) |
+| GET | recipe/count (Busca a quantidade de receitas geradas pelo usuario logado) |
+
+| POST | login (login usuario) |
+| POST | user/register (Registro usuario) |
+| GET | user/all (busca todos usuarios - esse o front n usa) |
 
 </details>
