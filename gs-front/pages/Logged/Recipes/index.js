@@ -9,7 +9,6 @@ import api from '../../../api'
 export default function Recipes() {
   const [showForm, setShowForm] = useState(false);
   const [listaAlimento, setListaAlimento] = useState([]);
-  const [contador, setContador] = useState(0);
 
   useEffect(() => {
     AsyncStorage.getItem("userToken").then((token) => {
@@ -24,8 +23,7 @@ export default function Recipes() {
     })
   }, [showForm]);
 
-  const Cadastro = (props) => {
-    const [nome, setNome] = useState("");
+  const Cadastro = () => {
     const [tempo, setTempo] = useState("");
     const [ingredientes, setIngredientes] = useState("");
     const [dificuldade, setDificuldade] = useState("");
@@ -43,10 +41,6 @@ export default function Recipes() {
       "medio", 
       "dificil"
     ];
-
-    const adicionarItem = (item) => {
-      setListaAlimento([...listaAlimento, item]);
-    };
 
     const Receita = () => {
       return(
@@ -164,34 +158,7 @@ export default function Recipes() {
     );
   }
 
-  const Item = (props) => {
-    return (
-      <View style={styles.card}>
-        <View style={{flex: 7}}>
-          <Text style={styles.titleCard}>{props.item.nome}</Text>
-          <Text style={styles.text}>Tipo: {props.item.tipo}</Text>
-          <Text style={styles.text}>Preco: {props.item.preco}</Text>
-          <Text style={styles.text}>items: {props.item.items}</Text>
-          {/* <View style={styles.vitamins}>
-            <Text style={styles.vitaminD}>D</Text>
-            <Text style={styles.vitaminA}>A</Text>
-            <Text style={styles.vitaminB2}>B2</Text>
-            <Text style={styles.vitaminB12}>B12</Text>
-          </View> */}
-        </View>
-        <View style={styles.iconsCard}>
-          <TouchableHighlight onPress={()=>{
-            props.onApagar(props.item.id);
-          }}>
-            <MaterialIcons name="delete" style={styles.iconCard}/>
-          </TouchableHighlight>
-          <MaterialIcons name="edit" style={styles.iconCard}/>
-        </View>
-      </View>
-    )
-  }
-
-  const Listagem = (props) => { 
+  const Listagem = () => { 
     return (
       <ScrollView style={styles.container}>
         <Text style={styles.link} onPress={()=>{setShowForm(true)}}>Cadastrar Receitas</Text>
@@ -199,8 +166,6 @@ export default function Recipes() {
           <Text style={styles.titleCard}>Receitas</Text>
         </View>
         <TextInput style={styles.inputFilter} placeholder="filtrar..." placeholderTextColor={'#ffffff80'}/>
-        {/* <FlatList data={props.lista} renderItem={
-          (propsItem)=><Item {...propsItem} onApagar={props.onApagar}/>}/> */}
         <View>
           {
             listaAlimento.map((receita, index) => {

@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, Alert, Image, StyleSheet, TouchableOpacity  } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
 
 import api from '../../../api'
-import Logged from '../../Logged/index'
 
 const RegisterScreen = ({onLogin}) => {
   const [showForm, setShowForm] = useState(false);
   const [users, setUsers] = useState([]);
-  const [logged, setLogged] = useState(false);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -25,33 +22,10 @@ const RegisterScreen = ({onLogin}) => {
     getUsers();
   }, []);
 
-  const clearStorage = async () => {
-    try {
-      await AsyncStorage.clear();
-      Alert.alert('AsyncStorage has been cleared!');
-      // .then((info)=>{alert("Chaves Limpas")})
-    } catch (error) {
-      console.log(error);
-      Alert.alert('Error clearing AsyncStorage.');
-    }
-  };
-
   const FormRegister = () => {
     const [nameRegister, setNameRegister] = useState('');
     const [loginRegister, setLoginRegister] = useState('');
     const [passwordRegister, setPasswordRegister] = useState('');
-
-    const showUsers = async () => {
-    await AsyncStorage.getItem('users')
-    .then((info)=>{
-      let lst = []
-      if(info){
-        lst = JSON.parse(info)
-      }
-      alert("Users: " + JSON.stringify(lst))
-    })
-    .catch((err)=>{alert("Erro ao ler a lista de usuários: " + err)})
-    };
 
     const handleRegister = async () => {
       api.post('/user/register', {
@@ -83,12 +57,6 @@ const RegisterScreen = ({onLogin}) => {
             <TouchableOpacity onPress={()=>setShowForm(false)}>
               <Text style={styles.link}>Faça o Login</Text>
             </TouchableOpacity>
-            {/* <TouchableOpacity onPress={clearStorage}>
-              <Text style={styles.link}>Clean registers</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={showUsers}>
-              <Text style={styles.link}>Show users</Text>
-            </TouchableOpacity> */}
           </View>
       </View>
     );
@@ -110,17 +78,6 @@ const RegisterScreen = ({onLogin}) => {
       });
     };
 
-    const showUsers = async () => {
-      await AsyncStorage.getItem('users')
-      .then((info)=>{
-        let lst = [];
-        if(info){
-          lst = JSON.parse(info);
-        }
-        alert("Users: " + JSON.stringify(lst));
-      }).catch((err)=>{alert("Erro ao ler a lista de usuários: " + err)});
-    };
-
     return (
       <View style={styles.form}>
         <Image style={styles.logo} source={require('../../../assets/logo-circle.png')}/>
@@ -137,12 +94,6 @@ const RegisterScreen = ({onLogin}) => {
           <TouchableOpacity onPress={()=>setShowForm(true)}>
             <Text style={styles.link}>Registre-se!</Text>
           </TouchableOpacity>
-          {/* <TouchableOpacity onPress={clearStorage}>
-            <Text style={styles.link}>Clean registers</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={showUsers}>
-            <Text style={styles.link}>Show users</Text>
-          </TouchableOpacity> */}
         </View>
       </View>
     );

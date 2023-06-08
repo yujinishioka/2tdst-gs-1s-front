@@ -1,54 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Button, FlatList, Text, TextInput, View, StyleSheet, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MaterialIcons } from '@expo/vector-icons';
-import { TouchableHighlight } from 'react-native';
+import React, { useState } from 'react';
+import { FlatList, Text, TextInput, View, StyleSheet } from 'react-native';
 
-const {Screen, Navigator} = createBottomTabNavigator();
-
-
-export default function App() {
-  const [showForm, setShowForm] = useState(false);
+export default function Home() {
   const [listaAlimento, setListaAlimento] = useState([]);
-  const [contador, setContador] = useState(1);
 
-
-const Item = (props) => {
-  return (
-    <View style={styles.card}>
-      <View style={{flex: 7}}>
-        <Text style={styles.titleCard}>{props.item.nome}</Text>
-        <Text style={styles.text}>Tipo: {props.item.tipo}</Text>
-        <Text style={styles.text}>Preco: {props.item.preco}</Text>
-        <Text style={styles.text}>Quantidade: {props.item.quantidade}</Text>
-        <View style={styles.vitamins}>
-          <Text style={styles.vitaminD}>D</Text>
-          <Text style={styles.vitaminA}>A</Text>
-          <Text style={styles.vitaminB2}>B2</Text>
-          <Text style={styles.vitaminB12}>B12</Text>
-        </View>
-      </View>
-    </View>
-  )
-}
-
-const Listagem = (props) => { 
-  return (
-    <View style={styles.container}>
-      <View style={styles.center}>
-        <Text style={styles.titleCard}>Receitas Globais</Text>
-      </View>
-      <TextInput style={styles.inputFilter} placeholder="filtrar..."/>
-
+  const Item = (props) => {
+    return (
       <View style={styles.card}>
         <View style={{flex: 7}}>
-          <Text style={styles.titleCard}>Barra Cereal</Text>
-          <Text style={styles.text}>Tipo: natural</Text>
-          <Text style={styles.text}>Preco: $10.00</Text>
-          <Text style={styles.text}>Itens: Granola, ovo, farinha...</Text>
-          <Text style={styles.text}>VITAMINAS</Text>
+          <Text style={styles.titleCard}>{props.item.nome}</Text>
+          <Text style={styles.text}>Tipo: {props.item.tipo}</Text>
+          <Text style={styles.text}>Preco: {props.item.preco}</Text>
+          <Text style={styles.text}>Quantidade: {props.item.quantidade}</Text>
           <View style={styles.vitamins}>
             <Text style={styles.vitaminD}>D</Text>
             <Text style={styles.vitaminA}>A</Text>
@@ -57,13 +20,38 @@ const Listagem = (props) => {
           </View>
         </View>
       </View>
+    )
+  }
 
-      <FlatList data={props.lista} renderItem={
-        (propsItem)=><Item {...propsItem} onApagar={props.onApagar}/>}/>
-    </View>
-  )
-}
+  const Listagem = (props) => { 
+    return (
+      <View style={styles.container}>
+        <View style={styles.center}>
+          <Text style={styles.titleCard}>Receitas Globais</Text>
+        </View>
+        <TextInput style={styles.inputFilter} placeholder="filtrar..."/>
 
+        <View style={styles.card}>
+          <View style={{flex: 7}}>
+            <Text style={styles.titleCard}>Barra Cereal</Text>
+            <Text style={styles.text}>Tipo: natural</Text>
+            <Text style={styles.text}>Preco: $10.00</Text>
+            <Text style={styles.text}>Itens: Granola, ovo, farinha...</Text>
+            <Text style={styles.text}>VITAMINAS</Text>
+            <View style={styles.vitamins}>
+              <Text style={styles.vitaminD}>D</Text>
+              <Text style={styles.vitaminA}>A</Text>
+              <Text style={styles.vitaminB2}>B2</Text>
+              <Text style={styles.vitaminB12}>B12</Text>
+            </View>
+          </View>
+        </View>
+
+        <FlatList data={props.lista} renderItem={
+          (propsItem)=><Item {...propsItem} onApagar={props.onApagar}/>}/>
+      </View>
+    )
+  }
 
   const apagar = ( id ) => { 
     const novaLista = [];

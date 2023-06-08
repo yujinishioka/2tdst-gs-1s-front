@@ -1,95 +1,88 @@
-import React, { useState, useEffect } from 'react';
-import { Button, FlatList, Text, TextInput, View, StyleSheet, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React, { useState } from 'react';
+import { FlatList, Text, TextInput, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { TouchableHighlight } from 'react-native';
 
-const {Screen, Navigator} = createBottomTabNavigator();
-
-
-export default function App() {
+export default function Items() {
   const [showForm, setShowForm] = useState(false);
   const [listaAlimento, setListaAlimento] = useState([]);
   const [contador, setContador] = useState(1);
 
+  const Cadastro = (props) => {
+    const [nome, setNome] = useState("Queijo Mussarela");
+    const [tipo, setTipo] = useState("Frios");
+    const [preco, setPreco] = useState("36.00");
+    const [quantidade, setQuantidade] = useState("200gr");
+    return (
+      <ScrollView style={styles.container}>
+        <Text style={styles.link} onPress={()=>{setShowForm(false)}}>Itens</Text>
+        <View style={styles.center}>
+          <Text style={styles.titleCard}>Cadastrar itens</Text>
+        </View>
+        <View style={styles.form}>
+          
+          <Text style={styles.label}>Nome</Text>
+          <TextInput style={styles.input} value={nome} onChangeText={setNome}/>
+          <Text style={styles.label}>Tipo</Text>
+          <TextInput style={styles.input} value={tipo} onChangeText={setTipo}/>
+          <Text style={styles.label}>Preço</Text>
+          <TextInput style={styles.input} value={preco} onChangeText={setPreco}/>
+          <Text style={styles.label}>Quantidade</Text>
+          <TextInput style={styles.input} value={quantidade} onChangeText={setQuantidade}/>
+          <View style={{flex:1, alignItems:"center"}}>
+            <TouchableOpacity  style={styles.buttonPrimary} onPress={()=>{
+            const obj = {nome, tipo, preco, quantidade}
+            props.onSalvar( obj );
+          }} >
+            <Text>Salvar</Text>
+          </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    );
+  }
 
-const Cadastro = (props) => {
-  const [nome, setNome] = useState("Queijo Mussarela");
-  const [tipo, setTipo] = useState("Frios");
-  const [preco, setPreco] = useState("36.00");
-  const [quantidade, setQuantidade] = useState("200gr");
-  return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.link} onPress={()=>{setShowForm(false)}}>Itens</Text>
-      <View style={styles.center}>
-        <Text style={styles.titleCard}>Cadastrar itens</Text>
-      </View>
-      <View style={styles.form}>
-        
-        <Text style={styles.label}>Nome</Text>
-        <TextInput style={styles.input} value={nome} onChangeText={setNome}/>
-        <Text style={styles.label}>Tipo</Text>
-        <TextInput style={styles.input} value={tipo} onChangeText={setTipo}/>
-        <Text style={styles.label}>Preço</Text>
-        <TextInput style={styles.input} value={preco} onChangeText={setPreco}/>
-        <Text style={styles.label}>Quantidade</Text>
-        <TextInput style={styles.input} value={quantidade} onChangeText={setQuantidade}/>
-        <View style={{flex:1, alignItems:"center"}}>
-          <TouchableOpacity  style={styles.buttonPrimary} onPress={()=>{
-          const obj = {nome, tipo, preco, quantidade}
-          props.onSalvar( obj );
-        }} >
-          <Text>Salvar</Text>
-        </TouchableOpacity>
+  const Item = (props) => {
+    console.log("Apagar: ", props);
+    return (
+      <View style={styles.card}>
+        <View style={{flex: 7}}>
+          <Text style={styles.titleCard}>{props.item.nome}</Text>
+          <Text style={styles.text}>Tipo: {props.item.tipo}</Text>
+          <Text style={styles.text}>Preco: {props.item.preco}</Text>
+          <Text style={styles.text}>Quantidade: {props.item.quantidade}</Text>
+          <View style={styles.vitamins}>
+            <Text style={styles.vitaminD}>D</Text>
+            <Text style={styles.vitaminA}>A</Text>
+            <Text style={styles.vitaminB2}>B2</Text>
+            <Text style={styles.vitaminB12}>B12</Text>
+          </View>
+        </View>
+        <View style={styles.iconsCard}>
+          <TouchableHighlight onPress={()=>{
+            props.onApagar(props.item.id);
+          }}>
+            <MaterialIcons name="delete" style={styles.iconCard}/>
+          </TouchableHighlight>
+          <MaterialIcons name="edit" style={styles.iconCard}/>
         </View>
       </View>
-    </ScrollView>
-  );
-}
+    )
+  }
 
-const Item = (props) => {
-  console.log("Apagar: ", props);
-  return (
-    <View style={styles.card}>
-      <View style={{flex: 7}}>
-        <Text style={styles.titleCard}>{props.item.nome}</Text>
-        <Text style={styles.text}>Tipo: {props.item.tipo}</Text>
-        <Text style={styles.text}>Preco: {props.item.preco}</Text>
-        <Text style={styles.text}>Quantidade: {props.item.quantidade}</Text>
-        <View style={styles.vitamins}>
-          <Text style={styles.vitaminD}>D</Text>
-          <Text style={styles.vitaminA}>A</Text>
-          <Text style={styles.vitaminB2}>B2</Text>
-          <Text style={styles.vitaminB12}>B12</Text>
+  const Listagem = (props) => { 
+    return (
+      <View style={styles.container}>
+        <Text style={styles.link} onPress={()=>{setShowForm(true)}}>Cadastrar Itens</Text>
+        <View style={styles.center}>
+          <Text style={styles.titleCard}>Itens</Text>
         </View>
+        <TextInput style={styles.inputFilter} placeholder="filtrar..."/>
+        <FlatList data={props.lista} renderItem={
+          (propsItem)=><Item {...propsItem} onApagar={props.onApagar}/>}/>
       </View>
-      <View style={styles.iconsCard}>
-        <TouchableHighlight onPress={()=>{
-          props.onApagar(props.item.id);
-        }}>
-          <MaterialIcons name="delete" style={styles.iconCard}/>
-        </TouchableHighlight>
-        <MaterialIcons name="edit" style={styles.iconCard}/>
-      </View>
-    </View>
-  )
-}
-
-const Listagem = (props) => { 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.link} onPress={()=>{setShowForm(true)}}>Cadastrar Itens</Text>
-      <View style={styles.center}>
-        <Text style={styles.titleCard}>Itens</Text>
-      </View>
-      <TextInput style={styles.inputFilter} placeholder="filtrar..."/>
-      <FlatList data={props.lista} renderItem={
-        (propsItem)=><Item {...propsItem} onApagar={props.onApagar}/>}/>
-    </View>
-  )
-}
+    )
+  }
 
   const salvar = ( obj ) => { 
     obj['id'] = contador;

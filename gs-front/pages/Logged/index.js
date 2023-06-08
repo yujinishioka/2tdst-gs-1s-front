@@ -1,7 +1,7 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import { Text, View, StyleSheet, Image } from 'react-native';
-import {createDrawerNavigator, DrawerItems} from '@react-navigation/drawer';
+import { View, StyleSheet } from 'react-native';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 
 import Home from './home/index';
 import Profile from './Profile/index';
@@ -11,7 +11,7 @@ import About from './About/index';
 
 const {Navigator, Screen} = createDrawerNavigator();
 
-export default function App({onLogout}) {
+export default function App() {
   return (
     <NavigationContainer drawerItemStyle={styles.drawerItem} style={styles.drawerItem}>
       <View style={styles.container}>
@@ -21,7 +21,6 @@ export default function App({onLogout}) {
         <Screen name="Itens" component={Items}/>
         <Screen name="Recipes" component={Recipes}/>
         <Screen name="Sobre" component={About}/>
-        {/* <Screen name="Sair" component={Logoff}/> */}
       </Navigator>
       </View>
     </NavigationContainer>

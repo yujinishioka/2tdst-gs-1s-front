@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View, ScrollView, StyleSheet, Image } from 'react-native';
 
-export default function App() {
+export default function Profile() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.card}>
