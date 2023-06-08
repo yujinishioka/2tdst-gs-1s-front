@@ -19,6 +19,10 @@ RM | Nome
 Combata a fome global com o CookAi: um aplicativo revolucionário com um toque de inteligência artificial. Gerencie alimentos de forma eficiente, crie receitas incríveis e evite desperdícios.
 Chega de pensar "o que vou cozinhar hoje?" - o CookAi torna a tarefa fácil e divertida!
 
+## Link para o vídeo do Projeto
+
+https://www.youtube.com/watch?v=aH7zKlzqBIQ
+
 ## Rodar Projeto (Expo ou Android Stúdio), Api java
 <details>
 <summary>Expo</summary>
