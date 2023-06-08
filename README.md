@@ -164,7 +164,6 @@ npm i
 ```
 
 *rodando o projeto*
-
 ```
 npm start
 ```
@@ -179,16 +178,19 @@ expo start
 
 <details>
 <summary>API Java docker</summary>
+
 *depois de abrir o prompt da pasta com Git bash, faça:*
 ```
 cd cook-ai-application/
 ```
-
+*convert Uto unix format*
+```
+dos2unix gradlew
+```
 *voltar pasta*
 ```
 cd ..
 ```
-
 *rodar api*
 ```
 docker-compose up --build
@@ -198,13 +200,12 @@ docker-compose up --build
 ## Rotas
 | Methods | Route  |
 |---|---|
-| POST | recipe (Cria receita) |
-| GET | recipe (Busca todas receitas do usuário logado) |
-| GET | recipe/all (Busca todas receitas de todos usuários) |
-| GET | recipe/count (Busca a quantidade de receitas geradas pelo usuario logado) |
-
-| POST | login (login usuario) |
-| POST | user/register (Registro usuario) |
-| GET | user/all (busca todos usuarios - esse o front n usa) |
+| GET | /recipe (Busca todas receitas do usuário logado) |
+| GET | /recipe/all (Busca todas receitas de todos usuários) |
+| GET | /recipe/count (Busca a quantidade de receitas geradas pelo usuario logado) |
+| POST | /recipe (Cria receita) |
+| POST | /login (login usuario) |
+| POST | /user/register (Registro usuario) |
+| GET | /user/all (busca todos usuarios - esse o front n usa) |
 
 </details>
