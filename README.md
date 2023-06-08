@@ -19,11 +19,40 @@ RM | Nome
 Combata a fome global com o CookAi: um aplicativo revolucionário com um toque de inteligência artificial. Gerencie alimentos de forma eficiente, crie receitas incríveis e evite desperdícios.
 Chega de pensar "o que vou cozinhar hoje?" - o CookAi torna a tarefa fácil e divertida!
 
-## Start Project
+## Rodar Projeto (Expo ou Android Stúdio), Api java
 <details>
 <summary>Expo</summary>
 
-Expo
+# Start project
+  
+  
+| Dependency | Version  |
+| --- | --- |
+| Node | 16.18.0 |
+| npm | 8.19.2 |
+
+*instalando dependências*
+```
+npm i
+```
+
+*rodando o projeto*
+```
+expo start -c
+```
+
+*alterano ambiente*
+```js
+//2tdst-gs-1s-front/gs-front/api.js
+import axios from 'axios';
+const api = axios.create({
+baseURL: 'http://192.168.0.16:8080/',//<<< ALTERAR
+headers: {
+'Content-Type': 'application/json',
+},
+});
+export default api;
+```
 
 </details>
 
@@ -36,6 +65,7 @@ Expo
 | --- | --- |
 | Node | 18.x |
 | JDK | 11 |
+| npm | 8.19.2 |
 | Android Studio | 2022.2.1.20 |
   
 ### **Recomendações**
@@ -144,5 +174,32 @@ ou
 ```
 expo start
 ```
+
+</details>
+
+<details>
+<summary>API Java docker</summary>
+*Git bash*
+*run bash api java*
+```
+cd cook-ai-application/
+```
+*voltar pasta*
+```
+cd ..
+```
+*rodar api*
+```
+docker-compose up --build
+```
+| Methods | Route  |
+| POST | /recipe (Cria receita) |
+| GET | /recipe (Busca todas receitas do usuário logado) |
+| GET | /recipe/all (Busca todas receitas de todos usuários) |
+| GET | /recipe/count (Busca a quantidade de receitas geradas pelo usuario logado) |
+
+| POST | /login (login usuario) |
+| POST | /user/register (Registro usuario) |
+| GET | /user/all (busca todos usuarios - esse o front n usa) |
 
 </details>
