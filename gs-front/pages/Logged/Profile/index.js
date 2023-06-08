@@ -1,7 +1,26 @@
 import * as React from 'react';
 import { Text, View, ScrollView, StyleSheet, Image } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function App() {
+import api from '../../../api'
+
+export default function Profile() {
+  const [cont, setCont] = React.useState(0);
+
+  React.useEffect(() => {
+    AsyncStorage.getItem("userToken").then((token) => {
+      api.get('/recipe/count', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }).then((resp) => {
+        setCont(resp.data);
+      }).catch((err) => {
+        alert(`Erro: ${err}`)
+      })
+    })
+  }, [])
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.card}>
@@ -46,7 +65,7 @@ export default function App() {
       <View style={styles.rowContainer}>
         <View style={[styles.miniCard, { flex: 1 }]}>
           <Text style={styles.title}>Receitas Criadas</Text>
-          <Text style={styles.text}>5</Text>
+          <Text style={styles.text}>{cont}</Text>
         </View>
       </View>
       <View style={styles.rowContainer}>
