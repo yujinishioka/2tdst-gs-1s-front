@@ -20,7 +20,7 @@ Combata a fome global com o CookAi: um aplicativo revolucionário com um toque d
 Chega de pensar "o que vou cozinhar hoje?" - o CookAi torna a tarefa fácil e divertida!
 
 ## Video
-https://www.youtube.com/watch?v=aH7zKlzqBIQ
+[Apresentação](https://www.youtube.com/watch?v=K33PFLh1LkA&ab_channel=Leandro)
 
 ## (Expo ou Android Stúdio), Api java
 <details>
